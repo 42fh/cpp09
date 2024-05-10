@@ -1,31 +1,5 @@
 #include "BitcoinExchange.hpp"
 
-/*
-static void 	evaluate_line(const std::string& line)
-{
-	std::stringstream ss;
-	std::string date;
-	char c;
-	double amount;
-
-	ss << line;
-
-	ss >> date;
-	ss >> c;
-	ss >> amount;
-
-	//TODO
-	//if date is invalid
-
-	if (c != '|'){
-		std::cerr << "Error: invalid format\n";	return ;}
-
-	if (!(amount <= 1000 && amount >= 0)){
-			std::cerr << "Error: invalid format\n";	return ;}
-
-	std::cout << date << " => " << amount << " = " << amount * getClosestRate(date) << '\n';
-}
-*/
 static void 	process_date_list(std::string filename, const BitcoinExchange& ex)
 {
 	std::fstream fs(filename.c_str());

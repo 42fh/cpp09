@@ -25,6 +25,8 @@ public:
 
 	double	getClosestRate(const std::string& date) const;
 	void		evaluate_line(const std::string& line) const;
+
+	static bool validateDate(const std::string& date);
 };
 
 /*
