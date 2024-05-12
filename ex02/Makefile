@@ -1,6 +1,6 @@
 #CXX is short for CPP Compiler
 CXX:=c++
-NAME:=prg
+NAME:=PmergeMe
 SRCS:=main.cpp PmergeMe.cpp
 OBJS:= ${SRCS:.cpp=.o} 
 CPPFLAGS:=-Wall -Wextra -Werror -std=c++98 
