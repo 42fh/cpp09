@@ -1,15 +1,12 @@
 #include <iostream>
 #include <vector>
 #include <cstdlib>
+#include <set>
 
-// #include "PmergeMe"
 
-std::ostream& operator<<(std::ostream& o, std::vector<int> v)
-{
-    for (std::vector<int>::iterator it = v.begin(); it != v.end(); it++)
-        o << *it << ", ";
-    return (o);
-}
+#include "PmergeMe.hpp"
+
+
 
 static bool isdig(char *str)
 {
@@ -34,6 +31,9 @@ static std::vector<int> validate_input(int c, char **v)
             throw std::runtime_error("invalid number (no negative numbers allowed)");
         ret.push_back(tmp);
     }
+    std::set<int> retset(ret.begin(), ret.end());
+    if (retset.size() != ret.size())
+        throw std::runtime_error("no duplicates allowed");
     return (ret);
 }
 
@@ -50,8 +50,16 @@ int main(int c, char **v)
     catch (std::exception& e){
         std::cerr << e.what() << '\n';
     }
+    
+    std::cout << "provided input:\n" << input << '\n';
+    std::cout << "is sorted input: " << fh::issorted< std::vector<int> >(input.begin(), input.end()) << '\n';
+    
+    // PmergeMe< std::vector<int> > a(input.begin(), input.end());
+    // PmergeMe< std::vector<int> > a;
 
-    std::cout << input << '\n';
+    PmergeMe::sort_with_vec< std::vector<int> >(input.begin(), input.end());
 
-    // PmergeMe a();
+    std::cout << "sorted input:\n" << input << '\n';
+    std::cout << "is sorted input: " << fh::issorted< std::vector<int> >(input.begin(), input.end()) << '\n';
+
 }
