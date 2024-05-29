@@ -1,10 +1,28 @@
 #pragma once
 #include <vector>
-
 #include <iostream>
 
+
+// typedefs
+typedef std::vector<int>::iterator vii;
+
+
+#define out std::cout
+
+
 // Helper functions
-std::ostream& operator<<(std::ostream& o, std::vector<int> v);
+std::ostream& operator<<(std::ostream& o, const std::vector<int>& v);
+
+template <typename T>
+std::ostream& operator<<(std::ostream& o, const std::vector<T>& v)
+{
+    for (typename std::vector<T>::const_iterator it = v.begin(); it != v.end(); ++it)
+    {
+        o << "[ " << *it << " ]" << '\n';
+    }
+    return o;
+}
+
 
 namespace fh {
     
@@ -52,7 +70,51 @@ namespace fh {
         }
     }
 
+    template <typename T>
+    void sort(T& vec)
+    {
+        sort(vec.begin(), vec.end());
+    }
+    
+    template <typename T>
+    void sort_v_2(std::vector<T>& vec)
+    {
+        if (vec.at(0) > vec.at(1))
+            fh::swap(vec.at(0), vec.at(1));
+    }
 
+    // [a, b, c]
+    // a, b, c
+    // a', b', c
+    // a <-- b,   c
+    // __ a <--  __  b __,   c
+    // three slots, 2 comparisons
+    template <typename T>
+    void sort_v_3(std::vector<T>& vec)
+    {
+        typename std::vector<T>::iterator begin = vec.begin();
+        typename std::vector<T>::iterator mid = begin + 1;
+        typename std::vector<T>::iterator last = begin + 2;
+
+        // order the first two
+        if (*begin > *mid)
+            fh::swap(*begin, *mid);
+
+        //insert last
+        if (*last < *begin) // last is smallest
+        {
+            fh::swap(*last, *mid);
+            fh::swap(*mid, *begin);
+        }
+        else if (*last < *mid) // last is between begin and mid
+        {
+            fh::swap(*last, *mid);
+        }
+    }
+
+    void sort_v_21(std::vector<int>& vec);
+
+    
 }
 
 
@@ -69,11 +131,23 @@ public:
     PmergeMe();
     ~PmergeMe();
 
-    static void sort_vec(std::vector<int>::iterator, std::vector<int>::iterator);
+    static void sort_v(std::vector<int>& vec);
+
+    template <typename T>
+    static void sort_v(std::vector<T>& vec);
 
     template <typename T>
     static void sort_with_vec(typename T::iterator begin, typename T::iterator end);
 };
+
+
+
+
+template <typename T>
+static void sort_v(std::vector<T>& vec)
+{
+    fh::sort(vec.begin(), vec.end());
+}
 
 template <typename T>
 void PmergeMe::sort_with_vec(typename T::iterator begin, typename T::iterator end)
@@ -83,7 +157,7 @@ void PmergeMe::sort_with_vec(typename T::iterator begin, typename T::iterator en
     for(typename T::iterator it = begin; it != end; ++it){ 
         v.push_back(*it); }
     
-    PmergeMe::sort_vec(v.begin(), v.end());
+    PmergeMe::sort_v(v);
 
     // copy result back
     typename T::iterator it = begin;

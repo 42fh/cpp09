@@ -10,6 +10,9 @@ all: $(NAME) PmergeMe.hpp
 $(NAME): $(OBJS) PmergeMe.hpp
 	$(CXX) $(CPPFLAGS) $(OBJS) -o $(NAME)
 
+%.o: %.cpp PmergeMe.hpp
+	$(CXX) $(CPPFLAGS) -c $< -o $@
+
 clean:
 	rm -f $(OBJS)
 
@@ -21,11 +24,15 @@ re: fclean
 
 go: 
 	make all
-	./$(NAME)
+	bash run.sh
+
+21go: 
+	make all
+	bash run21.sh
 
 ergo: 
 	make re
-	./$(NAME)
+	make go
 
 
 .PHONY: all clean fclean re go ergo
