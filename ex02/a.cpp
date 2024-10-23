@@ -94,17 +94,49 @@ int main(int argc, char const *argv[])
 
     // 1 3 2 5 4 11 10 9 8 7 6
 
-    vec.insert(vec.begin(), vec_semi_sorted.at(1));
-    binary_insert(vec_semi_sorted.at( 3 * 2 - 1), 3, vec);
-    binary_insert(vec_semi_sorted.at( 2 * 2 - 1), 4, vec);
-    binary_insert(vec_semi_sorted.at( 5 * 2 - 1), 5, vec);
-    binary_insert(vec_semi_sorted.at( 4 * 2 - 1), 6, vec);
+    int low = 0;
+    int high = 1;
+    const int vec_len = vec_semi_sorted.size();
+    for (int k = 1; k < 5; k++){
+        for (int i = high; i > low; i--)
+        {
+            if (vec_len > i * 2 - 1)
+                binary_insert(vec_semi_sorted.at( i * 2 - 1), 2, vec);
+        }
+        low = high;
+        high = (std::pow(2, k+1) + std::pow(-1, k)) / 3;
+
+    }
+
+    // high = 3;
+    // for (int i = high; i > low; i--)
+    // {
+    //     binary_insert(vec_semi_sorted.at( i * 2 - 1), 4, vec);
+    // }
+
+    // low = high;
+    // high = 5;
+    // for (int i = high; i > low; i--)
+    // {
+    //     binary_insert(vec_semi_sorted.at( i * 2 - 1), 6, vec);
+    // }
+    // low = high;
+    // high = 10;
+    // for (int i = high; i > low; i--)
+    // {
+    //     binary_insert(vec_semi_sorted.at( i * 2 - 1), 12, vec);
+    // }
+
+    // binary_insert(vec_semi_sorted.at( 3 * 2 - 1), 3, vec);
+    // binary_insert(vec_semi_sorted.at( 2 * 2 - 1), 4, vec);
+    // binary_insert(vec_semi_sorted.at( 5 * 2 - 1), 5, vec);
+    // binary_insert(vec_semi_sorted.at( 4 * 2 - 1), 6, vec);
  // binary_insert(vec_semi_sorted.at(11 * 2 - 1), 7, vec); does not exit
-    binary_insert(vec_semi_sorted.at(10 * 2 - 1), 8, vec);
-    binary_insert(vec_semi_sorted.at( 9 * 2 - 1), 9, vec);
-    binary_insert(vec_semi_sorted.at( 8 * 2 - 1),10, vec);
-    binary_insert(vec_semi_sorted.at( 7 * 2 - 1),11, vec);
-    binary_insert(vec_semi_sorted.at( 6 * 2 - 1),12, vec);
+    // binary_insert(vec_semi_sorted.at(10 * 2 - 1), 8, vec);
+    // binary_insert(vec_semi_sorted.at( 9 * 2 - 1), 9, vec);
+    // binary_insert(vec_semi_sorted.at( 8 * 2 - 1),10, vec);
+    // binary_insert(vec_semi_sorted.at( 7 * 2 - 1),11, vec);
+    // binary_insert(vec_semi_sorted.at( 6 * 2 - 1),12, vec);
     
 
     std::cout << vec << std::endl;
