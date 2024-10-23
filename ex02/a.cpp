@@ -29,7 +29,6 @@ void binary_insert(const int num, int range, std::vector<int>& v){
 
     pos = (p / 2) - 1 ;
     step = (pos + 1) / 2;
-    std::cout << step << ' ' << pos << ' ' << p << ' ' << range <<std::endl;
 
     while (step > 0)
     {
@@ -49,8 +48,8 @@ void binary_insert(const int num, int range, std::vector<int>& v){
 
 int main(int argc, char const *argv[])
 {
-    // std::srand(std::time(nullptr));
-    std::srand(5);
+    std::srand(std::time(nullptr));
+    // std::srand(5);
     
     std::vector<int> vec_semi_sorted;
 
@@ -97,15 +96,18 @@ int main(int argc, char const *argv[])
     int low = 0;
     int high = 1;
     const int vec_len = vec_semi_sorted.size();
+
+    int counter = 3;
     for (int k = 1; k < 5; k++){
+        high = (std::pow(2, k+1) + std::pow(-1, k)) / 3;
         for (int i = high; i > low; i--)
         {
-            if (vec_len > i * 2 - 1)
-                binary_insert(vec_semi_sorted.at( i * 2 - 1), 2, vec);
+            if (vec_len > i * 2 - 1){
+                binary_insert(vec_semi_sorted.at( i * 2 - 1), counter, vec);
+                counter += 1;
+            }
         }
         low = high;
-        high = (std::pow(2, k+1) + std::pow(-1, k)) / 3;
-
     }
 
     // high = 3;
