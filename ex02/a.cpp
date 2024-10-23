@@ -21,63 +21,36 @@ std::ostream& operator<<(std::ostream &os, const std::vector<int> v)
 }
 
 void binary_insert(const int num, int range, std::vector<int>& v){
-    std::cout << "binary_insert " << num << " " << range << std::endl;
-    // assumes range signifies where the number can be inserted
 
-    int p = std::pow(2, std::ceil( std::log2(range)));
-    std::cout << "p = " << p << std::endl;
+    int p = std::pow(2, std::ceil( std::log2(range + 0.1)));
 
     int step;
     int pos;
 
-    if (p == 8 || 1 == 1){
-        step = std::ceil( std::log2(range)) - 1;
-        pos = (p / 2) - 1 ;
- 
-        while (step > 0)
-        {
-            if (num < v.at(pos))
-                pos -= step;
-            else
-                pos += step;
-            step /= 2; 
-        }
+    pos = (p / 2) - 1 ;
+    step = (pos + 1) / 2;
+    std::cout << step << ' ' << pos << ' ' << p << ' ' << range <<std::endl;
+
+    while (step > 0)
+    {
         if (num < v.at(pos))
-            (void)0;
+            pos -= step;
         else
-            pos += 1;
-        
-
+            pos += step;
+        step /= 2; 
     }
-    // else {
+    if (num < v.at(pos))
+        (void)0;
+    else
+        pos += 1;
 
-    // step = 1;
-    // pos = 1;
-    // while (step > 0)
-    // {
-    //     if (num < v.at(pos))
-    //         pos -= 1;
-    //     else
-    //         pos += 1;
-    //     step /= 2; 
-    // }
-    // // last check
-    // if (num < v.at(pos))
-    //     (void)0;
-    // else
-    //     pos += 1;
-    // }
-
-
-    std::cout << pos << std::endl;
-    std::cout << v << std::endl;
     v.insert(v.begin() + pos, num);
 }
 
 int main(int argc, char const *argv[])
 {
     // std::srand(std::time(nullptr));
-    std::srand(3);
+    std::srand(5);
     
     std::vector<int> vec_semi_sorted;
 
@@ -119,21 +92,22 @@ int main(int argc, char const *argv[])
     }
 
 
-    
-    vec.insert(vec.begin(), vec_semi_sorted.at(1));
-    // vec.insert(vec.end(), 333);
-    // populate what where?
-    // 1 3 5 11...
     // 1 3 2 5 4 11 10 9 8 7 6
 
-    binary_insert(vec_semi_sorted.at(3 * 2 - 1), 3, vec);
-    binary_insert(vec_semi_sorted.at(2 * 2 - 1), 4, vec);
-    binary_insert(vec_semi_sorted.at(5 * 2 - 1), 5, vec);
-    // binary_insert(vec_semi_sorted.at(4 * 2 - 1), 5, vec);
+    vec.insert(vec.begin(), vec_semi_sorted.at(1));
+    binary_insert(vec_semi_sorted.at( 3 * 2 - 1), 3, vec);
+    binary_insert(vec_semi_sorted.at( 2 * 2 - 1), 4, vec);
+    binary_insert(vec_semi_sorted.at( 5 * 2 - 1), 5, vec);
+    binary_insert(vec_semi_sorted.at( 4 * 2 - 1), 6, vec);
+ // binary_insert(vec_semi_sorted.at(11 * 2 - 1), 7, vec); does not exit
+    binary_insert(vec_semi_sorted.at(10 * 2 - 1), 8, vec);
+    binary_insert(vec_semi_sorted.at( 9 * 2 - 1), 9, vec);
+    binary_insert(vec_semi_sorted.at( 8 * 2 - 1),10, vec);
+    binary_insert(vec_semi_sorted.at( 7 * 2 - 1),11, vec);
+    binary_insert(vec_semi_sorted.at( 6 * 2 - 1),12, vec);
     
 
     std::cout << vec << std::endl;
-
 
     if (std::is_sorted(std::begin(vec), std::end(vec)))
         std::cout << "OK" << std::endl;
