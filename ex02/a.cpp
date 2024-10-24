@@ -79,45 +79,61 @@ void binary_insert(const int num, int range, std::vector<int>& v){
 
 int main(int argc, char const *argv[])
 {
-    const int vector_length = 10000;
-    std::srand(std::time(nullptr));
-    // std::srand(5);
+    const int vector_length = 8;
+    // std::srand(std::time(nullptr));
+    std::srand(3);
+    std::srand(33);
     
-    std::vector<int> vec_semi_sorted;
+    std::vector<int> vec_unsorted;
 
-    for (int i = 10; i < 10 + vector_length; i++){
-        if (i % 2 == 0)
-            vec_semi_sorted.push_back(i);
-        else
-            vec_semi_sorted.push_back(randint(i - 10, i - 1  ));
+    for (int i = 0; i < vector_length; i++){
+        vec_unsorted.push_back(randint(0, 99));
     }
-    std::cout << vec_semi_sorted << '\n' << std::endl;
+    std::cout << vec_unsorted << '\n' << std::endl;
 
-    
+    for (int i = 0; i < vec_unsorted.size(); i += 2)
+    {
+        if (vec_unsorted.at(i) > vec_unsorted.at(i + 1))
+            std::swap(vec_unsorted.at(i), vec_unsorted.at(i + 1));
+    }
 
+    std::cout << vec_unsorted << '\n' << std::endl;
+
+    for (int i = 0; i < vec_unsorted.size(); i += 4)
+    {
+        if (vec_unsorted.at(i) > vec_unsorted.at(i + 2))
+            std::swap(vec_unsorted.at(i), vec_unsorted.at(i + 2));
+            std::swap(vec_unsorted.at(i + 1), vec_unsorted.at(i + 3));
+    }
+
+    std::cout << vec_unsorted << '\n' << std::endl;
+
+
+    for (int i = 0; i < vec_unsorted.size(); i += 8)
+    {
+        if (vec_unsorted.at(i) > vec_unsorted.at(i + 4))
+            std::swap(vec_unsorted.at(i), vec_unsorted.at(i + 4));
+            std::swap(vec_unsorted.at(i + 1), vec_unsorted.at(i + 5));
+            std::swap(vec_unsorted.at(i + 2), vec_unsorted.at(i + 6));
+            std::swap(vec_unsorted.at(i + 3), vec_unsorted.at(i + 7));
+    }
+
+    std::cout << vec_unsorted << '\n' << std::endl;
 
     std::vector<int> vec;
-    for (int i = 0; i < vector_length; i++){
-        if (i % 2 == 0)
-            vec.push_back(vec_semi_sorted.at(i));
-    }
+    vec.insert(vec.begin(), 4, -1);
 
-
-    // 1 3 2 5 4 11 10 9 8 7 6 ...
     int low = 0;
     int high = 1;
-    const int vec_len = vec_semi_sorted.size();
+    const int vec_len = vec_unsorted.size();
 
-    int insertion_range = 3;
     int stop_bound = 20;
     for (int k = 1; k < stop_bound; k++){
         high = (std::pow(2, k+1) + std::pow(-1, k)) / 3;
         for (int i = high; i > low; i--)
         {
             if (vec_len > i * 2 - 1){
-                binary_insert(vec_semi_sorted.at( i * 2 - 1), std::pow(2, k) - 1, vec);
-                // binary_insert(vec_semi_sorted.at( i * 2 - 1), insertion_range, vec);
-                insertion_range += 1;
+                binary_insert(vec_unsorted.at( i * 2 - 1), std::pow(2, k) - 1, vec);
             }
             else
                 stop_bound = k;
