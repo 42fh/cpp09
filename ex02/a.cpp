@@ -22,7 +22,8 @@ std::ostream& operator<<(std::ostream &os, const std::vector<int> v)
 
 void binary_insert(const int num, int range, std::vector<int>& v){
 
-    int p = std::pow(2, std::ceil( std::log2(range + 0.1)));
+    int p = std::pow(2, std::ceil( std::log2(range + 0.01)));
+    const int v_len = v.size();
 
     int step;
     int pos;
@@ -30,52 +31,61 @@ void binary_insert(const int num, int range, std::vector<int>& v){
     pos = (p / 2) - 1 ;
     step = (pos + 1) / 2;
 
+    // std::cout << " " << num << " " << range << " " << p << " " << pos <<  " " << step << std::endl;
+
     while (step > 0)
     {
-        if (num < v.at(pos))
+        if (num < v.at(std::min(pos, v_len - 1)))
             pos -= step;
         else
             pos += step;
         step /= 2; 
     }
-    if (num < v.at(pos))
+    if (num < v.at(std::min(pos, v_len - 1)))
         (void)0;
     else
         pos += 1;
 
-    v.insert(v.begin() + pos, num);
+
+
+    
+
+
+    v.insert(std::min(v.begin() + pos, v.end()), num);
 }
 
 int main(int argc, char const *argv[])
 {
+    const int vector_length = 300;
     std::srand(std::time(nullptr));
     // std::srand(5);
     
     std::vector<int> vec_semi_sorted;
 
-    for (int i = 10; i < 30; i++){
+    for (int i = 10; i < 10 + vector_length; i++){
         if (i % 2 == 0)
             vec_semi_sorted.push_back(i);
         else
-            vec_semi_sorted.push_back(randint(i - 7, i - 1  ));
+            vec_semi_sorted.push_back(randint(i - 10, i - 1  ));
     }
     std::cout << vec_semi_sorted << '\n' << std::endl;
 
+    // printing
     {
         std::cout << std::setw(2);
 
-        for (size_t i = 0; i < 20; i++){
+        for (size_t i = 0; i < vector_length; i++){
             if (i % 2 == 0)
                 std::cout << std::setw(2) << vec_semi_sorted.at(i) << ' ';
         }
         std::cout << '\n';
-        for (size_t i = 0; i < 20; i++){
+        for (size_t i = 0; i < vector_length; i++){
             if (i % 2 == 1)
                 std::cout << " | " ;
         }
         std::cout << '\n';
 
-        for (size_t i = 0; i < 20; i++){
+        for (size_t i = 0; i < vector_length; i++){
             if (i % 2 == 1)
                 std::cout << std::setw(2) << vec_semi_sorted.at(i) << ' ';
         }
@@ -85,61 +95,33 @@ int main(int argc, char const *argv[])
 
 
     std::vector<int> vec;
-    for (int i = 0; i < 20; i++){
+    for (int i = 0; i < vector_length; i++){
         if (i % 2 == 0)
             vec.push_back(vec_semi_sorted.at(i));
     }
 
 
-    // 1 3 2 5 4 11 10 9 8 7 6
-
+    // 1 3 2 5 4 11 10 9 8 7 6 ...
     int low = 0;
     int high = 1;
     const int vec_len = vec_semi_sorted.size();
 
-    int counter = 3;
-    for (int k = 1; k < 5; k++){
+    int insertion_range = 3;
+    int stop_bound = 20;
+    for (int k = 1; k < stop_bound; k++){
         high = (std::pow(2, k+1) + std::pow(-1, k)) / 3;
         for (int i = high; i > low; i--)
         {
             if (vec_len > i * 2 - 1){
-                binary_insert(vec_semi_sorted.at( i * 2 - 1), counter, vec);
-                counter += 1;
+                binary_insert(vec_semi_sorted.at( i * 2 - 1), std::pow(2, k) - 1, vec);
+                // binary_insert(vec_semi_sorted.at( i * 2 - 1), insertion_range, vec);
+                insertion_range += 1;
             }
+            else
+                stop_bound = k;
         }
         low = high;
     }
-
-    // high = 3;
-    // for (int i = high; i > low; i--)
-    // {
-    //     binary_insert(vec_semi_sorted.at( i * 2 - 1), 4, vec);
-    // }
-
-    // low = high;
-    // high = 5;
-    // for (int i = high; i > low; i--)
-    // {
-    //     binary_insert(vec_semi_sorted.at( i * 2 - 1), 6, vec);
-    // }
-    // low = high;
-    // high = 10;
-    // for (int i = high; i > low; i--)
-    // {
-    //     binary_insert(vec_semi_sorted.at( i * 2 - 1), 12, vec);
-    // }
-
-    // binary_insert(vec_semi_sorted.at( 3 * 2 - 1), 3, vec);
-    // binary_insert(vec_semi_sorted.at( 2 * 2 - 1), 4, vec);
-    // binary_insert(vec_semi_sorted.at( 5 * 2 - 1), 5, vec);
-    // binary_insert(vec_semi_sorted.at( 4 * 2 - 1), 6, vec);
- // binary_insert(vec_semi_sorted.at(11 * 2 - 1), 7, vec); does not exit
-    // binary_insert(vec_semi_sorted.at(10 * 2 - 1), 8, vec);
-    // binary_insert(vec_semi_sorted.at( 9 * 2 - 1), 9, vec);
-    // binary_insert(vec_semi_sorted.at( 8 * 2 - 1),10, vec);
-    // binary_insert(vec_semi_sorted.at( 7 * 2 - 1),11, vec);
-    // binary_insert(vec_semi_sorted.at( 6 * 2 - 1),12, vec);
-    
 
     std::cout << vec << std::endl;
 
@@ -147,8 +129,6 @@ int main(int argc, char const *argv[])
         std::cout << "OK" << std::endl;
     else
         std::cout << "┌─────┐\n│ERROR│\n└─────┘" << std::endl;
-
-
 
     return 0;
 }
