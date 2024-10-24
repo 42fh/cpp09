@@ -229,7 +229,6 @@ int main(int argc, char const *argv[])
     std::cout << "vec      " << vec << '\n' << std::endl;
     std::cout << "uns      " << vec_unsorted << '\n' << std::endl;
 
-
     for (int i = 0; i < vec_unsorted.size(); i++){
         if (i % 2 == 0)
             vec.push_back(vec_unsorted.at(i));}
