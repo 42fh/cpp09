@@ -90,14 +90,14 @@ void binary_insert_block(std::vector<int>::const_iterator nums, int range, std::
 
     // std::cout << " " << num << " " << range << " " << p << " " << pos <<  " " << step << std::endl;
 
-    if (range == 1)
-    {
-        for (int i = 0; i < block; i++)
-        {
-            v.push_back(*(nums + i));
-        }
-        return;
-    }
+    // if (range == 1)
+    // {
+    //     for (int i = 0; i < block; i++)
+    //     {
+    //         v.push_back(*(nums + i));
+    //     }
+    //     return;
+    // }
 
     while (step > 0)
     {
@@ -113,7 +113,7 @@ void binary_insert_block(std::vector<int>::const_iterator nums, int range, std::
         pos += 1;
 
 
-    for (int i = 0; i < block; i++)
+    for (int i = block - 1; i >= 0; i--)
     {
         v.insert(std::min(v.begin() + pos, v.end()), *(nums + i));
     }
@@ -220,10 +220,10 @@ int main(int argc, char const *argv[])
     }
     std::cout << "vec      " << vec << '\n' << std::endl;
     // multiple_binary_insert_block(vec_unsorted, vec, 2);
-    // binary_insert_block(vec_unsorted.begin() + 2, 1, vec, 2);
-    // binary_insert_block(vec_unsorted.begin() + 6, 1, vec, 2);
-    vec.insert(vec.begin(), vec_unsorted.begin() + 2, vec_unsorted.begin() + 4);
-    vec.insert(vec.begin(), vec_unsorted.begin() + 6, vec_unsorted.begin() + 8);
+    binary_insert_block(vec_unsorted.begin() + 2, 1, vec, 2);
+    binary_insert_block(vec_unsorted.begin() + 6, 3, vec, 2);
+    // vec.insert(vec.begin(), vec_unsorted.begin() + 2, vec_unsorted.begin() + 4);
+    // vec.insert(vec.begin(), vec_unsorted.begin() + 6, vec_unsorted.begin() + 8);
     std::cout << "vec      " << vec << '\n' << std::endl;
 
     vec_unsorted.clear();
