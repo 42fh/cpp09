@@ -48,7 +48,7 @@ std::ostream& operator<<(std::ostream &os, const std::vector<int> v)
     return os;
 }
 
-void binary_insert(const int num, int range, std::vector<int>& v){
+void binary_insert(const int num, const int range, std::vector<int>& v){
 
     const int p = std::pow(2, std::ceil( std::log2(range + 0.01)));
     const int v_len = v.size();
@@ -74,6 +74,8 @@ void binary_insert(const int num, int range, std::vector<int>& v){
     else
         pos += 1;
 
+    std::cout << " " << num << " " << range << " " << p << " " << pos <<  " " << step << std::endl;
+
     v.insert(std::min(v.begin() + pos, v.end()), num);
 }
 
@@ -88,35 +90,29 @@ void binary_insert_block(std::vector<int>::const_iterator nums, int range, std::
     pos = (p / 2) - 1 ;
     step = (pos + 1) / 2;
 
-    // std::cout << " " << num << " " << range << " " << p << " " << pos <<  " " << step << std::endl;
-
-    // if (range == 1)
-    // {
-    //     for (int i = 0; i < block; i++)
-    //     {
-    //         v.push_back(*(nums + i));
-    //     }
-    //     return;
-    // }
+    std::cout << " " << *nums << " " << range << " " << p << " " << pos <<  " " << step  << " block " << block << std::endl;
 
     while (step > 0)
     {
-        if (*nums < v.at(std::min(block * pos, v_len - 1)))
+        std::cout << pos << ", ";
+        if (*nums < v.at(   std::min(block * pos, block * (v_len ))   )    )
             pos -= step;
         else
             pos += step;
         step /= 2; 
     }
-    if (*nums < v.at(std::min(block * pos, v_len - 1)))
+
+    std::cout << pos << ", ";
+    if (*nums < v.at(std::min(block * pos, block * (v_len))))
         (void)0;
     else
         pos += 1;
 
+    std::cout << pos << ", \n";
 
-    for (int i = block - 1; i >= 0; i--)
-    {
-        v.insert(std::min(v.begin() + pos, v.end()), *(nums + i));
-    }
+    std::cout << " " << *nums << " " << range << " " << p << " " << pos <<  " " << step  << " block " << block << std::endl;
+    v.insert(std::min(v.begin() + pos, v.end()), nums, nums + block);
+
 }
 
 void move_range(std::vector<int>::iterator a, std::vector<int>::iterator b, int block_length)
@@ -147,14 +143,12 @@ void multiple_binary_insert(const std::vector<int> &vec_unsorted, std::vector<in
 
     int stop_bound = 20;
 
-
-
     for (int k = 1; k < stop_bound; k++){
         high = (std::pow(2, k+1) + std::pow(-1, k)) / 3;
         for (int i = high; i > low; i--)
         {
             if (vec_len > i * 2 - 1){
-                binary_insert(vec_unsorted.at( i * 2 - 1), std::pow(2, k) - 1, vec);
+                binary_insert(vec_unsorted.at( i * 2 - 1), std::pow(2, k), vec);
             }
             else
                 stop_bound = k;
@@ -189,7 +183,7 @@ int main(int argc, char const *argv[])
 {
     const int vector_length = 8;
     // std::srand(std::time(nullptr));
-    std::srand(15);
+    std::srand(16);
     
     std::vector<int> vec_unsorted;
 
@@ -220,10 +214,14 @@ int main(int argc, char const *argv[])
     }
     std::cout << "vec      " << vec << '\n' << std::endl;
     // multiple_binary_insert_block(vec_unsorted, vec, 2);
+
     binary_insert_block(vec_unsorted.begin() + 2, 1, vec, 2);
-    binary_insert_block(vec_unsorted.begin() + 6, 3, vec, 2);
     // vec.insert(vec.begin(), vec_unsorted.begin() + 2, vec_unsorted.begin() + 4);
-    // vec.insert(vec.begin(), vec_unsorted.begin() + 6, vec_unsorted.begin() + 8);
+    std::cout << "vec      " << vec << '\n' << std::endl;
+
+    //                  what         , where roughtly, where to, blocksize
+    binary_insert_block(vec_unsorted.begin() + 6, 3, vec, 2);
+    // vec.insert(vec.end() - 2, vec_unsorted.begin() + 6, vec_unsorted.begin() + 8);
     std::cout << "vec      " << vec << '\n' << std::endl;
 
     vec_unsorted.clear();
