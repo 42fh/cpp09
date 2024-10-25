@@ -61,12 +61,6 @@ void binary_insert(const int num, int range, std::vector<int>& v){
 
     std::cout << " " << num << " " << range << " " << p << " " << pos <<  " " << step << std::endl;
 
-    if (range == 1)
-    {
-        v.push_back(num);
-        return;
-    }
-
     while (step > 0)
     {
         if (num < v.at(std::min(pos, v_len - 1)))
@@ -137,9 +131,11 @@ void pair_up(std::vector<int> &vec_unsorted)
     {
         for (int i = 0; i + block < vec_unsorted.size(); i += 2*block)
         {
-            if (vec_unsorted.at(i) > vec_unsorted.at(i + block))
+            if (vec_unsorted.at(i) < vec_unsorted.at(i + block))
                 move_range(vec_unsorted.begin() + i, vec_unsorted.begin() + i + block, block);
         }
+        std::cout << "vec_unsorted " << vec_unsorted << '\n' << std::endl;
+
     } 
 }
 
@@ -150,6 +146,8 @@ void multiple_binary_insert(const std::vector<int> &vec_unsorted, std::vector<in
     const int vec_len = vec_unsorted.size();
 
     int stop_bound = 20;
+
+
 
     for (int k = 1; k < stop_bound; k++){
         high = (std::pow(2, k+1) + std::pow(-1, k)) / 3;
@@ -202,8 +200,12 @@ int main(int argc, char const *argv[])
     std::cout << "unsorted " << vec_unsorted << '\n' << std::endl;
 
     pair_up(vec_unsorted);
-
     std::cout << "paired   " << vec_unsorted << '\n' << std::endl;
+
+
+    move_range(vec_unsorted.begin(), vec_unsorted.begin() + 4, 4);
+    std::cout << "moveed   " << vec_unsorted << '\n' << std::endl;
+
 
     std::vector<int> vec;
 
@@ -218,8 +220,10 @@ int main(int argc, char const *argv[])
     }
     std::cout << "vec      " << vec << '\n' << std::endl;
     // multiple_binary_insert_block(vec_unsorted, vec, 2);
-    binary_insert_block(vec_unsorted.begin() + 2, std::pow(2, 2) - 1, vec, 2);
-    binary_insert_block(vec_unsorted.begin() + 6, 1, vec, 2);
+    // binary_insert_block(vec_unsorted.begin() + 2, 1, vec, 2);
+    // binary_insert_block(vec_unsorted.begin() + 6, 1, vec, 2);
+    vec.insert(vec.begin(), vec_unsorted.begin() + 2, vec_unsorted.begin() + 4);
+    vec.insert(vec.begin(), vec_unsorted.begin() + 6, vec_unsorted.begin() + 8);
     std::cout << "vec      " << vec << '\n' << std::endl;
 
     vec_unsorted.clear();
