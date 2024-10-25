@@ -189,7 +189,7 @@ int main(int argc, char const *argv[])
 {
     const int vector_length = 8;
     // std::srand(std::time(nullptr));
-    std::srand(14);
+    std::srand(15);
     
     std::vector<int> vec_unsorted;
 
