@@ -31,13 +31,15 @@ public:
 	t_iv get_A_block(const unsigned int i) const;
 	t_iv get_B_block(const unsigned int i) const;
 	t_iv get_X_block(const unsigned int i) const;
+	t_iv get_all_A_blocks() const;
 
-	unsigned int max_A_i(void);
-	unsigned int max_B_i(void);
+	unsigned int max_A_i(void) const;
+	unsigned int max_B_i(void) const;
 
 	int get_A(const unsigned int i) const;
 	int get_B(const unsigned int i) const;
 	int get_X(const unsigned int i) const;
+
 
 	const t_iv& getVector() const {
 		return _vector;
@@ -98,8 +100,6 @@ void block_vector::binary_insert_block(const unsigned int biggest_possible_X_pos
 		pos += 1;
 
 
-	OS << "biggest_possible_X_pos = " << biggest_possible_X_pos << " pos = " << pos << " block_vec = " << block_vec << EL;
-
 	this->insert_X_block(pos, block_vec);
 }
 
@@ -122,9 +122,8 @@ void block_vector::binary_insert_all_B_s(const block_vector &paired_block_vector
 			else
 			{
 				t_iv b_i = paired_block_vector.get_B_block(index);
-				OS << "index: " << index << " b_i =  " << b_i << " b_i_start = " << b_i_start << EL;
+				OS << "index: " << index << EL;
 				this->binary_insert_block(b_i_start, b_i);
-				OS << "_vector = " << _vector << EL;
 			}
 		}
 		b_i_end = b_i_start;
@@ -132,12 +131,12 @@ void block_vector::binary_insert_all_B_s(const block_vector &paired_block_vector
 }
 
 
-unsigned int block_vector::max_A_i(void)
+unsigned int block_vector::max_A_i(void) const
 {
 	return (_vector.size() / block_size) / 2;
 }
 
-unsigned int block_vector::max_B_i(void)
+unsigned int block_vector::max_B_i(void) const
 {
 	return ((_vector.size() / block_size) + 1) / 2;
 }
@@ -222,14 +221,26 @@ t_iv block_vector::get_X_block(const unsigned int i) const
 }
 
 
+t_iv block_vector::get_all_A_blocks() const
+{
+	const unsigned int max_a_index = this->max_A_i();
+
+	t_iv ret;
+	for (unsigned int i = 1; i <= max_a_index; i += 1)
+	{
+		const t_iv a_i = this->get_A_block(i);
+		ret.insert(ret.end(), a_i.begin(), a_i.end());
+	}
+	return ret;
+}
+
+
 // ----
 
 
 int main(int argc, char const *argv[])
 {
 	set_and_print_seed();
-
-
 	const t_iv random_vector = create_rand_vector(16);
 	const t_iv pair_vector = make_pairs_of_pairs(random_vector);
 
@@ -243,66 +254,43 @@ int main(int argc, char const *argv[])
 	block_swap(one_swap_vector.begin(), one_swap_vector.begin() + two_block_size, two_block_size);
 
 	OS << random_vector << "\n\n";
-	OS << pair_vector << "\n\n";
-	OS << one_swap_vector << "\n\n";
+	// OS << pair_vector << "\n\n";
+	// OS << one_swap_vector << "\n\n";
 
-
-	// block_vector demo
-	/*
-	{
-		block_vector bv1(one_swap_vector, 4);
-		OS << "block vect \n " << bv1.getVector(); 
-		OS << "block A_1 = \n " << bv1.get_A_block(1); 
-		OS << "block B_1 = \n " << bv1.get_B_block(1); 
-		OS << "block A_2 = \n " << bv1.get_A_block(2); 
-		OS << "block B_2 = \n " << bv1.get_B_block(2); 
-
-		block_vector bv2(one_swap_vector, 16);
-		OS << "block A_1 = \n " << bv2.get_A_block(1); 
-	}
-	*/
-
+	
 
 	block_vector four_blocks(one_swap_vector, 4); // four blocks of size four
 
-	t_iv four_blocks_sorted;
 
-	// blind chain
-	t_iv a2 = four_blocks.get_A_block(2);	four_blocks_sorted.insert(four_blocks_sorted.begin(), a2.begin(), a2.end());
-	t_iv a1 = four_blocks.get_A_block(1);	four_blocks_sorted.insert(four_blocks_sorted.begin(), a1.begin(), a1.end());
-
-
+	t_iv four_blocks_sorted = four_blocks.get_all_A_blocks();
 	block_vector four_blocks_sorted_BV(four_blocks_sorted, 4);
-	four_blocks_sorted_BV.binary_insert_all_B_s(four_blocks);
-	// t_iv b1 = four_blocks.get_B_block(1);	//four_blocks_sorted.insert(four_blocks_sorted.begin(), b1.begin(), b1.end());
-
-	// insert b2
-	// t_iv b2 = four_blocks.get_B_block(2);
-	// four_blocks_sorted_BV.binary_insert_block(1, b1);
-
-	// unsigned int pos = 2;
-	// if (four_blocks_sorted_BV.get_X(pos) > b2.front())
-	// 	pos -= 1;
-	// else
-	// 	pos += 1;
 	
-	// if (four_blocks_sorted_BV.get_X(pos) > b2.front())
-	// 	pos += 0;
-	// else
-	// 	pos += 1;
-	// four_blocks_sorted_BV.binary_insert_block(3, b2);
+	
+	// blind chain
+	// t_iv a2 = four_blocks.get_A_block(2);	four_blocks_sorted.insert(four_blocks_sorted.begin(), a2.begin(), a2.end());
+	// t_iv a1 = four_blocks.get_A_block(1);	four_blocks_sorted.insert(four_blocks_sorted.begin(), a1.begin(), a1.end());
 
 
-	// OS << "pos = " << pos << EL;
-	// four_blocks_sorted_BV.insert_X_block(pos, b2);
-	// four_blocks_sorted.insert(four_blocks_sorted.begin() + (pos - 1) * 4, b2.begin(), b2.end());
+
+	four_blocks_sorted_BV.binary_insert_all_B_s(four_blocks);
 
 
-                                                                                    
+	block_vector eight_blocks(four_blocks_sorted_BV.getVector(), 2);
+	t_iv eight_blocks_sorted = eight_blocks.get_all_A_blocks();
+	block_vector eight_blocks_sorted_BV(eight_blocks_sorted, 2);
+	eight_blocks_sorted_BV.binary_insert_all_B_s(eight_blocks);
+
+
+	block_vector sixteen_blocks(eight_blocks_sorted_BV.getVector(), 1);
+	t_iv sixteen_blocks_sorted = sixteen_blocks.get_all_A_blocks();
+	block_vector sixteen_blocks_sorted_BV(sixteen_blocks_sorted, 1);
+	sixteen_blocks_sorted_BV.binary_insert_all_B_s(sixteen_blocks);
+
 
 	OS << four_blocks_sorted << EL;
 	OS << four_blocks_sorted_BV.getVector() << EL;
-
+	OS << eight_blocks_sorted_BV.getVector() << EL;
+	OS << sixteen_blocks_sorted_BV.getVector() << EL;
 
 	return 0;
 }
@@ -325,8 +313,8 @@ int main(int argc, char const *argv[])
 
 void set_and_print_seed()
 {
-	// const unsigned int seed = time(nullptr) % 1000;
-	const unsigned int seed = 907;
+	const unsigned int seed = time(nullptr) % 1000;
+	// const unsigned int seed = 907;
 	std::srand(seed);
 	std::cout << "seed = " << seed << std::endl;
 }
