@@ -122,7 +122,7 @@ void block_vector::binary_insert_all_B_s(const block_vector &paired_block_vector
 			else
 			{
 				t_iv b_i = paired_block_vector.get_B_block(index);
-				OS << "index: " << index << EL;
+				// OS << "index: " << index << EL;
 				this->binary_insert_block(b_i_start, b_i);
 			}
 		}
@@ -259,11 +259,10 @@ int main(int argc, char const *argv[])
 
 	
 
-	block_vector four_blocks(one_swap_vector, 4); // four blocks of size four
-
-
-	t_iv four_blocks_sorted = four_blocks.get_all_A_blocks();
-	block_vector four_blocks_sorted_BV(four_blocks_sorted, 4);
+	// block_vector four_blocks(one_swap_vector, 4); // four blocks of size four
+	// t_iv four_blocks_sorted = four_blocks.get_all_A_blocks();
+	// block_vector four_blocks_sorted_BV(four_blocks_sorted, 4);
+	// four_blocks_sorted_BV.binary_insert_all_B_s(four_blocks);
 	
 	
 	// blind chain
@@ -271,27 +270,33 @@ int main(int argc, char const *argv[])
 	// t_iv a1 = four_blocks.get_A_block(1);	four_blocks_sorted.insert(four_blocks_sorted.begin(), a1.begin(), a1.end());
 
 
-
-	four_blocks_sorted_BV.binary_insert_all_B_s(four_blocks);
-
-
-	block_vector eight_blocks(four_blocks_sorted_BV.getVector(), 2);
-	t_iv eight_blocks_sorted = eight_blocks.get_all_A_blocks();
-	block_vector eight_blocks_sorted_BV(eight_blocks_sorted, 2);
-	eight_blocks_sorted_BV.binary_insert_all_B_s(eight_blocks);
-
-
-	block_vector sixteen_blocks(eight_blocks_sorted_BV.getVector(), 1);
-	t_iv sixteen_blocks_sorted = sixteen_blocks.get_all_A_blocks();
-	block_vector sixteen_blocks_sorted_BV(sixteen_blocks_sorted, 1);
-	sixteen_blocks_sorted_BV.binary_insert_all_B_s(sixteen_blocks);
+	t_iv before(one_swap_vector);
+	OS << before << EL;
+	for (unsigned int block_size = two_block_size / 2; block_size > 0; block_size /= 2)
+	{
+		OS << block_size << EL;
+		block_vector bs_blocks(before, block_size);
+		t_iv bs_all_a_s = bs_blocks.get_all_A_blocks();
+		block_vector bs_all_a_s_BV(bs_all_a_s, block_size);
+		bs_all_a_s_BV.binary_insert_all_B_s(bs_blocks);
+		before = bs_all_a_s_BV.getVector();
+		OS << before << EL;
+	}
 
 
-	OS << four_blocks_sorted << EL;
-	OS << four_blocks_sorted_BV.getVector() << EL;
-	OS << eight_blocks_sorted_BV.getVector() << EL;
-	OS << sixteen_blocks_sorted_BV.getVector() << EL;
+	// block_vector eight_blocks(four_blocks_sorted_BV.getVector(), 2);
+	// t_iv eight_blocks_sorted = eight_blocks.get_all_A_blocks();
+	// block_vector eight_blocks_sorted_BV(eight_blocks_sorted, 2);
+	// eight_blocks_sorted_BV.binary_insert_all_B_s(eight_blocks);
 
+
+	// block_vector sixteen_blocks(eight_blocks_sorted_BV.getVector(), 1);
+	// t_iv sixteen_blocks_sorted = sixteen_blocks.get_all_A_blocks();
+	// block_vector sixteen_blocks_sorted_BV(sixteen_blocks_sorted, 1);
+	// sixteen_blocks_sorted_BV.binary_insert_all_B_s(sixteen_blocks);
+
+
+	OS << before << EL;
 	return 0;
 }
 
