@@ -7,7 +7,8 @@ get_seeded_random()
     </dev/zero 2>/dev/null
 }
 
-SEED=$RANDOM
+# SEED=$RANDOM
+SEED='18187'
 echo "SEED = $SEED"
 
-./PmergeMe $(seq 100 | sort --random-source=<(get_seeded_random $SEED) -R  | tr '\n' ' ')
+./PmergeMe $(seq 27 | sort --random-source=<(get_seeded_random $SEED) -R  | tr '\n' ' ')
