@@ -45,7 +45,6 @@ void block_vector::binary_insert_block(const unsigned int k, const t_iv &block_v
 
 	while (step > 0)
 	{
-		if (leading_element == 19){	OS << pos << " " << this->get_X(pos) << " " << EL; 	}
 		if (this->get_X(pos) > leading_element)
 			pos -= step;
 		else
@@ -53,7 +52,6 @@ void block_vector::binary_insert_block(const unsigned int k, const t_iv &block_v
 		step /= 2;
 	}
 
-	if (leading_element == 19){	OS << pos << " " << this->get_X(pos) << " " << EL; 	}
 	if (this->get_X(pos) < leading_element)
 		pos += 1;
 	else
