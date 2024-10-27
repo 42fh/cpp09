@@ -170,11 +170,11 @@ int block_vector::get_X(const unsigned int i) const
 // one indexed acess for block A_1, A_2, ...
 t_iv block_vector::get_A_block(const unsigned int i) const
 {
-	if (_vector.size() < 2 * (i - 1) * block_size + block_size)
-	{
-		std::cerr << "getA tried accessing element " << i << " for blocksize " << block_size << " and vector size " << _vector.size() << " \n";
-		throw std::exception();
-	}
+	// if (_vector.size() < 2 * (i - 1) * block_size + block_size)
+	// {
+	// 	std::cerr << "getA tried accessing element " << i << " for blocksize " << block_size << " and vector size " << _vector.size() << " \n";
+	// 	throw std::exception();
+	// }
 	if (i == 0)
 	{
 		std::cerr << "getA is 1 indexed (0 is invalid) tried accessing element " << i << " for blocksize " << block_size << " and vector size " << _vector.size() << " \n";
@@ -190,11 +190,11 @@ t_iv block_vector::get_A_block(const unsigned int i) const
 // one indexed acess for block B_1, B_2, ...
 t_iv block_vector::get_B_block(const unsigned int i) const
 {
-	if (_vector.size() < 2 * (i) * block_size)
-	{
-		std::cerr << "get_B_block tried accessing element " << i << " for blocksize " << block_size << " and vector size " << _vector.size() << " \n";
-		throw std::exception();
-	}
+	// if (_vector.size() < 2 * (i) * block_size)
+	// {
+	// 	std::cerr << "get_B_block tried accessing element " << i << " for blocksize " << block_size << " and vector size " << _vector.size() << " \n";
+	// 	throw std::exception();
+	// }
 	if (i == 0)
 	{
 		std::cerr << "get_A_block is 1 indexed (0 is invalid) tried accessing element " << i << " for blocksize " << block_size << " and vector size " << _vector.size() << " \n";
@@ -248,7 +248,7 @@ t_iv block_vector::get_all_A_blocks() const
 int main()
 {
 	set_and_print_seed();
-	const t_iv random_vector = create_rand_vector(11);
+	const t_iv random_vector = create_rand_vector(10000, 1000000);
 	const t_iv pair_vector = make_pairs_of_pairs(random_vector);
 
 	const unsigned int biggest_smaller_power = calculate_biggest_block(pair_vector);
@@ -305,8 +305,8 @@ int main()
 
 void set_and_print_seed()
 {
-	// const unsigned int seed = time(NULL) % 1000;
-	const unsigned int seed = 325;
+	const unsigned int seed = time(NULL) % 1000;
+	// const unsigned int seed = 325;
 	std::srand(seed);
 	std::cout << "seed = " << seed << std::endl;
 }
@@ -388,6 +388,16 @@ std::vector<int> create_rand_vector(const unsigned int len)
 	return rand_vector;
 }
 
+std::vector<int> create_rand_vector(const unsigned int len, const unsigned int max_val)
+{
+	t_iv rand_vector;
+	for (size_t i = 0; i < len; i++)
+	{
+		rand_vector.push_back(random() % max_val);
+	}
+	return rand_vector;
+}
+
 
 unsigned int calculate_biggest_block(const t_iv &vector)
 {
@@ -404,7 +414,8 @@ unsigned int calculate_biggest_block(const t_iv &vector)
 
 std::ostream& operator<<(std::ostream& os, const std::vector<int> &v)
 {
-	for (size_t i = 0; i < v.size(); i++)
+	size_t i = 0;
+	for (; i < v.size() && i < 14; i++)
 	{
 		os << v.at(i);
 		if (i % 2 == 0)	
@@ -416,6 +427,8 @@ std::ostream& operator<<(std::ostream& os, const std::vector<int> &v)
 		else
 			os << "  ";
 	}
+	if (i < v.size())
+		os << "... (" << v.size() << " more)" << EL;
 	os << "\n";
 	return os;
 	
