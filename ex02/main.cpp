@@ -1,12 +1,59 @@
 #include <iostream>
 #include <vector>
+#include <set>
 #include <cstdlib>
 #include "PmergeMe.hpp"
 
-int main()
+static bool isdig(char *str)
 {
-	set_and_print_seed();
-	const t_iv random_vector = create_rand_vector(10000, 1000000);
+    while (*str)
+    {
+        if (std::isdigit(*str) == 0) return (false);
+        str++;
+    }
+    return (true);
+}
+
+static std::vector<int> validate_input(int c, char **v)
+{
+    std::vector<int> ret;
+
+    for (int i = 1; i < c; i++)
+    {
+        if (!isdig(v[i]))
+            throw std::runtime_error("invalid number (contains non digits)");
+        int tmp = atoi(v[i]);
+        if (tmp < 0)
+            throw std::runtime_error("invalid number (no negative numbers allowed)");
+        ret.push_back(tmp);
+    }
+    std::set<int> retset(ret.begin(), ret.end());
+    if (retset.size() != ret.size())
+        throw std::runtime_error("no duplicates allowed");
+    return (ret);
+}
+
+int main(int c, char **v)
+{
+    if (c < 2){
+        std::cerr << "Error: no input provided\n"; return(1); }
+
+
+    std::vector<int> input;
+    try {
+        input = validate_input(c, v);
+    }
+    catch (std::exception& e){
+        std::cerr << e.what() << '\n';
+    }
+    
+    std::cout << "provided input:\n" << input << '\n';
+
+	// ---- old vs new
+
+	// set_and_print_seed();
+	// const t_iv random_vector = create_rand_vector(10000, 1000000);
+	const t_iv random_vector = input;
 	const t_iv pair_vector = make_pairs_of_pairs(random_vector);
 
 	const unsigned int biggest_smaller_power = calculate_biggest_block(pair_vector);
