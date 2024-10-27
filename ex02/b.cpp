@@ -66,13 +66,14 @@ block_vector::~block_vector()
 
 void block_vector::insert_X_block(const unsigned int pos, const t_iv &block_vec)
 {
-	if (pos == 0 || pos > _vector.size() / block_size)
+	if (pos == 0 || pos > (_vector.size() / block_size) + 1)
 	{
 		std::cerr << "insert_X_block tried inserting at " << pos << " for blocksize " << block_size << " and vector size " << _vector.size() << " \n";
 		throw std::exception();
 	}
 
 	_vector.insert(_vector.begin() + (pos - 1) * block_size, block_vec.begin(), block_vec.end());
+	OS << "after instertion " << _vector << EL;
 }
 
 // eg 7 -> 4, 2
@@ -85,8 +86,16 @@ void block_vector::binary_insert_block(const unsigned int biggest_possible_X_pos
 	unsigned int step = pos / 2;
 	const int leading_element = block_vec.at(0);
 
+	if (leading_element == 19)
+	{
+		OS << biggest_possible_X_pos << " "  << pos << " " << step << " " << leading_element << " " << EL;
+	}
+
+
+
 	while (step > 0)
 	{
+		if (leading_element == 19){	OS << pos << " " << this->get_X(pos) << " " << EL; 	}
 		if (this->get_X(pos) > leading_element)
 			pos -= step;
 		else
@@ -94,12 +103,14 @@ void block_vector::binary_insert_block(const unsigned int biggest_possible_X_pos
 		step /= 2;
 	}
 
-	if (this->get_X(pos) > leading_element)
-		(void)0;
-	else
+	if (leading_element == 19){	OS << pos << " " << this->get_X(pos) << " " << EL; 	}
+	if (this->get_X(pos) < leading_element)
 		pos += 1;
+	else
+		(void)0;
 
 
+	OS << "trying to insert pos, block_ve: " << pos << " and " << block_vec << EL;
 	this->insert_X_block(pos, block_vec);
 }
 
@@ -238,10 +249,10 @@ t_iv block_vector::get_all_A_blocks() const
 // ----
 
 
-int main(int argc, char const *argv[])
+int main()
 {
 	set_and_print_seed();
-	const t_iv random_vector = create_rand_vector(16);
+	const t_iv random_vector = create_rand_vector(8);
 	const t_iv pair_vector = make_pairs_of_pairs(random_vector);
 
 	const unsigned int biggest_smaller_power = calculate_biggest_block(pair_vector);
@@ -274,12 +285,18 @@ int main(int argc, char const *argv[])
 	OS << before << EL;
 	for (unsigned int block_size = two_block_size / 2; block_size > 0; block_size /= 2)
 	{
-		OS << block_size << EL;
+		OS << "block_size = " << block_size << EL;
 		block_vector bs_blocks(before, block_size);
+
 		t_iv bs_all_a_s = bs_blocks.get_all_A_blocks();
+		
 		block_vector bs_all_a_s_BV(bs_all_a_s, block_size);
+		
 		bs_all_a_s_BV.binary_insert_all_B_s(bs_blocks);
+		
+		before.clear();
 		before = bs_all_a_s_BV.getVector();
+		
 		OS << before << EL;
 	}
 
@@ -318,8 +335,8 @@ int main(int argc, char const *argv[])
 
 void set_and_print_seed()
 {
-	const unsigned int seed = time(nullptr) % 1000;
-	// const unsigned int seed = 907;
+	// const unsigned int seed = time(nullptr) % 1000;
+	const unsigned int seed = 227;
 	std::srand(seed);
 	std::cout << "seed = " << seed << std::endl;
 }
