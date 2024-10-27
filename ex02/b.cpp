@@ -73,7 +73,6 @@ void block_vector::insert_X_block(const unsigned int pos, const t_iv &block_vec)
 	}
 
 	_vector.insert(_vector.begin() + (pos - 1) * block_size, block_vec.begin(), block_vec.end());
-	OS << "after instertion " << _vector << EL;
 }
 
 // eg 7 -> 4, 2
@@ -85,13 +84,6 @@ void block_vector::binary_insert_block(const unsigned int biggest_possible_X_pos
 	unsigned int pos = (biggest_possible_X_pos + 1)/ 2;
 	unsigned int step = pos / 2;
 	const int leading_element = block_vec.at(0);
-
-	if (leading_element == 19)
-	{
-		OS << biggest_possible_X_pos << " "  << pos << " " << step << " " << leading_element << " " << EL;
-	}
-
-
 
 	while (step > 0)
 	{
@@ -110,7 +102,6 @@ void block_vector::binary_insert_block(const unsigned int biggest_possible_X_pos
 		(void)0;
 
 
-	OS << "trying to insert pos, block_ve: " << pos << " and " << block_vec << EL;
 	this->insert_X_block(pos, block_vec);
 }
 
@@ -133,7 +124,6 @@ void block_vector::binary_insert_all_B_s(const block_vector &paired_block_vector
 			else
 			{
 				t_iv b_i = paired_block_vector.get_B_block(index);
-				// OS << "index: " << index << EL;
 				this->binary_insert_block(b_i_start, b_i);
 			}
 		}
@@ -285,7 +275,6 @@ int main()
 	OS << before << EL;
 	for (unsigned int block_size = two_block_size / 2; block_size > 0; block_size /= 2)
 	{
-		OS << "block_size = " << block_size << EL;
 		block_vector bs_blocks(before, block_size);
 
 		t_iv bs_all_a_s = bs_blocks.get_all_A_blocks();
@@ -297,7 +286,6 @@ int main()
 		before.clear();
 		before = bs_all_a_s_BV.getVector();
 		
-		OS << before << EL;
 	}
 
 
@@ -314,6 +302,15 @@ int main()
 
 
 	OS << before << EL;
+	if (isSorted(before))
+	{
+		OS << "OK" << EL;
+	}
+	else
+	{
+		OS << "+---------+\n|         |\n|  ERROR  |\n|         |\n+---------+\n" << EL;
+	}
+
 	return 0;
 }
 
@@ -335,10 +332,19 @@ int main()
 
 void set_and_print_seed()
 {
-	// const unsigned int seed = time(nullptr) % 1000;
-	const unsigned int seed = 227;
+	// const unsigned int seed = time(NULL) % 1000;
+	const unsigned int seed = 962;
 	std::srand(seed);
 	std::cout << "seed = " << seed << std::endl;
+}
+
+bool isSorted(const std::vector<int>& vec) {
+    for (size_t i = 1; i < vec.size(); ++i) {
+        if (vec[i] < vec[i - 1]) {
+            return false; // Found an out-of-order element
+        }
+    }
+    return true; // No out-of-order elements found
 }
 
 void block_swap(t_iv::iterator a, t_iv::iterator b, const unsigned int block_size)
