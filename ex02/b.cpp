@@ -248,7 +248,7 @@ t_iv block_vector::get_all_A_blocks() const
 int main()
 {
 	set_and_print_seed();
-	const t_iv random_vector = create_rand_vector(256);
+	const t_iv random_vector = create_rand_vector(11);
 	const t_iv pair_vector = make_pairs_of_pairs(random_vector);
 
 	const unsigned int biggest_smaller_power = calculate_biggest_block(pair_vector);
@@ -305,8 +305,8 @@ int main()
 
 void set_and_print_seed()
 {
-	const unsigned int seed = time(NULL) % 1000;
-	// const unsigned int seed = 962;
+	// const unsigned int seed = time(NULL) % 1000;
+	const unsigned int seed = 325;
 	std::srand(seed);
 	std::cout << "seed = " << seed << std::endl;
 }
