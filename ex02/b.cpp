@@ -11,6 +11,8 @@
 #define OS std::cout
 #define EL std::endl
 
+int main();
+
 class block_vector;
 
 class block_vector
@@ -25,7 +27,7 @@ public:
 	const unsigned int block_size;
 
 	void insert_X_block(const unsigned int pos, const t_iv &block_vec);
-	void binary_insert_block(const unsigned int biggest_possible_X_pos, const t_iv &block_vec);
+	void binary_insert_block(const unsigned int k, const t_iv &block_vec);
 	void binary_insert_all_B_s(const block_vector &paired_block_vector);
 
 	t_iv get_A_block(const unsigned int i) const;
@@ -79,11 +81,14 @@ void block_vector::insert_X_block(const unsigned int pos, const t_iv &block_vec)
 // _1_2_3_4_5_6_7_
 // eg 3 -> 
 // _1_2_3_
-void block_vector::binary_insert_block(const unsigned int biggest_possible_X_pos, const t_iv &block_vec)
+// b_4 which has 7 options (for 8 rand num) can be inserted with 3 cmps
+void block_vector::binary_insert_block(const unsigned int k, const t_iv &block_vec)
 {
-	unsigned int pos = (biggest_possible_X_pos + 1)/ 2;
+	unsigned int pos = std::pow(2, k - 1); // initial position 
 	unsigned int step = pos / 2;
 	const int leading_element = block_vec.at(0);
+	// OS << "pos = " << pos << " step = " << step << " leading_elemet = " << EL;
+
 
 	while (step > 0)
 	{
@@ -101,7 +106,7 @@ void block_vector::binary_insert_block(const unsigned int biggest_possible_X_pos
 	else
 		(void)0;
 
-
+	// OS << k << " " << pos << " " << block_vec << EL;
 	this->insert_X_block(pos, block_vec);
 }
 
@@ -116,6 +121,7 @@ void block_vector::binary_insert_all_B_s(const block_vector &paired_block_vector
 
 	for (unsigned int k = 1; k < k_boundary; k++)
 	{
+		// OS << "k = " << k << EL;
 		b_i_start = ( std::pow(2, k + 1) + std::pow(-1, k) ) / 3;
 		for (unsigned int index = b_i_start; index > b_i_end; index -= 1)
 		{
@@ -124,7 +130,7 @@ void block_vector::binary_insert_all_B_s(const block_vector &paired_block_vector
 			else
 			{
 				t_iv b_i = paired_block_vector.get_B_block(index);
-				this->binary_insert_block(b_i_start, b_i);
+				this->binary_insert_block(k, b_i);
 			}
 		}
 		b_i_end = b_i_start;
@@ -242,33 +248,19 @@ t_iv block_vector::get_all_A_blocks() const
 int main()
 {
 	set_and_print_seed();
-	const t_iv random_vector = create_rand_vector(8);
+	const t_iv random_vector = create_rand_vector(256);
 	const t_iv pair_vector = make_pairs_of_pairs(random_vector);
 
 	const unsigned int biggest_smaller_power = calculate_biggest_block(pair_vector);
 
-	OS << "biggest_smaller_power " << biggest_smaller_power << EL;
-
+	// OS << "biggest_smaller_power " << biggest_smaller_power << EL;
 
 	const unsigned int two_block_size = biggest_smaller_power / 2;
 	t_iv one_swap_vector = pair_vector;
 	block_swap(one_swap_vector.begin(), one_swap_vector.begin() + two_block_size, two_block_size);
 
+
 	OS << random_vector << "\n\n";
-	// OS << pair_vector << "\n\n";
-	// OS << one_swap_vector << "\n\n";
-
-	
-
-	// block_vector four_blocks(one_swap_vector, 4); // four blocks of size four
-	// t_iv four_blocks_sorted = four_blocks.get_all_A_blocks();
-	// block_vector four_blocks_sorted_BV(four_blocks_sorted, 4);
-	// four_blocks_sorted_BV.binary_insert_all_B_s(four_blocks);
-	
-	
-	// blind chain
-	// t_iv a2 = four_blocks.get_A_block(2);	four_blocks_sorted.insert(four_blocks_sorted.begin(), a2.begin(), a2.end());
-	// t_iv a1 = four_blocks.get_A_block(1);	four_blocks_sorted.insert(four_blocks_sorted.begin(), a1.begin(), a1.end());
 
 
 	t_iv before(one_swap_vector);
@@ -285,31 +277,12 @@ int main()
 		
 		before.clear();
 		before = bs_all_a_s_BV.getVector();
-		
+		// OS << block_size << " " << before << EL;
 	}
 
-
-	// block_vector eight_blocks(four_blocks_sorted_BV.getVector(), 2);
-	// t_iv eight_blocks_sorted = eight_blocks.get_all_A_blocks();
-	// block_vector eight_blocks_sorted_BV(eight_blocks_sorted, 2);
-	// eight_blocks_sorted_BV.binary_insert_all_B_s(eight_blocks);
+	final_check_and_msg(before);
 
 
-	// block_vector sixteen_blocks(eight_blocks_sorted_BV.getVector(), 1);
-	// t_iv sixteen_blocks_sorted = sixteen_blocks.get_all_A_blocks();
-	// block_vector sixteen_blocks_sorted_BV(sixteen_blocks_sorted, 1);
-	// sixteen_blocks_sorted_BV.binary_insert_all_B_s(sixteen_blocks);
-
-
-	OS << before << EL;
-	if (isSorted(before))
-	{
-		OS << "OK" << EL;
-	}
-	else
-	{
-		OS << "+---------+\n|         |\n|  ERROR  |\n|         |\n+---------+\n" << EL;
-	}
 
 	return 0;
 }
@@ -332,8 +305,8 @@ int main()
 
 void set_and_print_seed()
 {
-	// const unsigned int seed = time(NULL) % 1000;
-	const unsigned int seed = 962;
+	const unsigned int seed = time(NULL) % 1000;
+	// const unsigned int seed = 962;
 	std::srand(seed);
 	std::cout << "seed = " << seed << std::endl;
 }
@@ -345,6 +318,19 @@ bool isSorted(const std::vector<int>& vec) {
         }
     }
     return true; // No out-of-order elements found
+}
+
+void final_check_and_msg(const t_iv &before)
+{
+	OS << before << EL;
+	if (isSorted(before))
+	{
+		OS << "OK" << EL;
+	}
+	else
+	{
+		OS << "+---------+\n|         |\n|  ERROR  |\n|         |\n+---------+\n" << EL;
+	}
 }
 
 void block_swap(t_iv::iterator a, t_iv::iterator b, const unsigned int block_size)
