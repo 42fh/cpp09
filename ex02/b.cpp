@@ -355,7 +355,7 @@ t_iv make_pairs_of_pairs(const t_iv &vector)
 		(number_of_blocks = vector.size() / block_size) > 1
 	)
 	{
-		for (size_t i = 0; i + block_size < new_vector.size(); i += 2 * block_size)
+		for (size_t i = 0; i + 2 * block_size < new_vector.size(); i += 2 * block_size)
 		{
 			if (new_vector.at(i) < new_vector.at(i + block_size))
 				block_swap(new_vector.begin() + i, new_vector.begin() + i + block_size, block_size);
