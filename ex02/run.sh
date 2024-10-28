@@ -22,9 +22,7 @@ NUM='15'
 # NUM= "15"
 
 NUM='7'
-SEED= "24253"
-
-
+SEED="24253"
 
 echo "SEED = $SEED"
 echo "NUM = $NUM"

@@ -74,38 +74,26 @@ int main(int c, char **v)
 
 	const unsigned int biggest_smaller_power = calculate_biggest_block(pair_vector);
 
-
-
-	OS << "biggest_smaller_power " << biggest_smaller_power << EL;
-
-	const unsigned int two_block_size = biggest_smaller_power / 2;
-	t_iv one_swap_vector = pair_vector;
-	block_swap(one_swap_vector.begin(), one_swap_vector.begin() + two_block_size, two_block_size);
-
-
-	OS << random_vector << "\n\n";
-
-
-	t_iv before(one_swap_vector);
+	t_iv before(pair_vector);
 	OS << before << EL;
-	for (unsigned int block_size = two_block_size / 2; block_size > 0; block_size /= 2)
+	for (unsigned int block_size = biggest_smaller_power / 2; block_size > 0; block_size /= 2)
 	{
         if (hasDuplicates(before))
             OS << "ERROR, duplicates!\n"; 
-		// OS << block_size << " (blocksize) | num elements " << before.size() << "\n" << before << EL;
+		OS << block_size << " (blocksize) | num elements " << before.size() << "\n" << before << EL;
 
 		block_vector bs_blocks(before, block_size);
-        // OS << "bs_block \n" << bs_blocks.getVector() << EL;
+        OS << "bs_block \n" << bs_blocks.getVector() << EL;
 
 		t_iv bs_all_a_s = bs_blocks.get_all_A_blocks();
-        // OS << "bs_all_a_s \n" << bs_all_a_s << EL;
+        OS << "bs_all_a_s \n" << bs_all_a_s << EL;
 
 		block_vector bs_all_a_s_BV(bs_all_a_s, block_size);
-        // OS << "bs_all_a_s_BV \n" << bs_all_a_s_BV.getVector() << EL;
+        OS << "bs_all_a_s_BV \n" << bs_all_a_s_BV.getVector() << EL;
 
 		
 		bs_all_a_s_BV.binary_insert_all_B_s(bs_blocks);
-        // OS << "bs_all_a_s_BV binary inserted \n" << bs_all_a_s_BV.getVector() << EL;
+        OS << "bs_all_a_s_BV binary inserted \n" << bs_all_a_s_BV.getVector() << EL;
 
         if (before.size() != bs_all_a_s_BV.getVector().size())
         {
