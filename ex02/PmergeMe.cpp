@@ -104,12 +104,19 @@ unsigned int block_vector::max_B_i(void) const
 
 int block_vector::get_A(const unsigned int i) const
 {
+    if (i == 0 || i > this->max_A_i())
+        throw std::runtime_error("get_A tried accessing out of range index");
 	return _vector.at(2 * (i - 1) * block_size);
 }
 
 int block_vector::get_B(const unsigned int i) const
 {
-	return _vector.at(2 * (i - 1) * block_size + block_size);
+    if (i == 0 || i > this->max_B_i())
+        throw std::runtime_error("get_A tried accessing out of range index");
+    if (i == this->max_B_i())
+    	return _vector.at(2 * (i - 1) * block_size);
+    else
+    	return _vector.at(2 * (i - 1) * block_size + block_size);
 }
 
 int block_vector::get_X(const unsigned int i) const
@@ -323,7 +330,7 @@ unsigned int calculate_biggest_block(const t_iv &vector)
 std::ostream& operator<<(std::ostream& os, const std::vector<int> &v)
 {
 	size_t i = 0;
-	for (; i < v.size() && i < 14; i++)
+	for (; i < v.size() /* && i < 14 */; i++)
 	{
 		os << v.at(i);
 		if (i % 2 == 0)	
@@ -335,8 +342,8 @@ std::ostream& operator<<(std::ostream& os, const std::vector<int> &v)
 		else
 			os << "  ";
 	}
-	if (i < v.size())
-		os << "... (" << v.size() << " more)" << EL;
+	/* if (i < v.size())
+		os << "... (" << v.size() << " more)" << EL; */
 	os << "\n";
 	return os;
 	

@@ -3,8 +3,9 @@
 #include <set>
 #include <cstdlib>
 #include "PmergeMe.hpp"
+#include <iomanip>
 
-static bool isdig(char *str)
+static bool is_digit(char *str)
 {
     while (*str)
     {
@@ -20,7 +21,7 @@ static std::vector<int> validate_input(int c, char **v)
 
     for (int i = 1; i < c; i++)
     {
-        if (!isdig(v[i]))
+        if (!is_digit(v[i]))
             throw std::runtime_error("invalid number (contains non digits)");
         int tmp = atoi(v[i]);
         if (tmp < 0)
@@ -72,6 +73,7 @@ int main(int c, char **v)
 	OS << before << EL;
 	for (unsigned int block_size = two_block_size / 2; block_size > 0; block_size /= 2)
 	{
+		OS << block_size << " (blocksize), \n" << before << EL;
 		block_vector bs_blocks(before, block_size);
 
 		t_iv bs_all_a_s = bs_blocks.get_all_A_blocks();
@@ -82,11 +84,25 @@ int main(int c, char **v)
 		
 		before.clear();
 		before = bs_all_a_s_BV.getVector();
-		// OS << block_size << " " << before << EL;
 	}
 
 	final_check_and_msg(before);
 
+
+    {
+        block_vector test1(input, 1);
+        OS << "test1 = \n" << test1.getVector() << EL;
+        for (unsigned int i = 1; i <= test1.max_A_i(); i++)
+        {
+            OS << "A_"<< i << " = " << test1.get_A(i) << EL;
+        }
+        OS << EL << EL;
+        for (unsigned int i = 1; i <= test1.max_B_i(); i++)
+        {
+            OS << "B_" << i << " = " << test1.get_B(i) << EL;
+        }
+        OS << EL;
+    }
 
 
 	return 0;
