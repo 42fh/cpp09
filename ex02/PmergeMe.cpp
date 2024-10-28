@@ -333,7 +333,7 @@ unsigned int calculate_biggest_block(const t_iv &vector)
 std::ostream& operator<<(std::ostream& os, const std::vector<int> &v)
 {
 	size_t i = 0;
-	for (; i < v.size() /* && i < 14 */; i++)
+	for (; i < v.size() && i < 14; i++)
 	{
 		os << v.at(i);
 		if (i % 2 == 0)	
@@ -345,8 +345,8 @@ std::ostream& operator<<(std::ostream& os, const std::vector<int> &v)
 		else
 			os << "  ";
 	}
-	/* if (i < v.size())
-		os << "... (" << v.size() << " more)" << EL; */
+	if (i < v.size())
+		os << "... (" << v.size() << " more)" << EL;
 	os << "\n";
 	return os;
 	

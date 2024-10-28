@@ -80,24 +80,21 @@ int main(int c, char **v)
 	{
         if (hasDuplicates(before))
             OS << "ERROR, duplicates!\n"; 
-		OS << block_size << " (blocksize) | num elements " << before.size() << "\n" << before << EL;
+		// OS << block_size << " (blocksize) | num elements " << before.size() << "\n" << before << EL;
 
 		block_vector bs_blocks(before, block_size);
-        OS << "bs_block \n" << bs_blocks.getVector() << EL;
+        // OS << "bs_block \n" << bs_blocks.getVector() << EL;
 
 		t_iv bs_all_a_s = bs_blocks.get_all_A_blocks();
-        OS << "bs_all_a_s \n" << bs_all_a_s << EL;
+        // OS << "bs_all_a_s \n" << bs_all_a_s << EL;
 
 		block_vector bs_all_a_s_BV(bs_all_a_s, block_size);
-        OS << "bs_all_a_s_BV \n" << bs_all_a_s_BV.getVector() << EL;
+        // OS << "bs_all_a_s_BV \n" << bs_all_a_s_BV.getVector() << EL;
 
 		
 		bs_all_a_s_BV.binary_insert_all_B_s(bs_blocks);
-        OS << "bs_all_a_s_BV binary inserted \n" << bs_all_a_s_BV.getVector() << EL;
-
-        if (before.size() != bs_all_a_s_BV.getVector().size())
-        {
-        }        
+        // OS << "bs_all_a_s_BV binary inserted \n" << bs_all_a_s_BV.getVector() << EL;
+     
         const int delta = before.size() - bs_all_a_s_BV.getVector().size();
         bs_all_a_s_BV.insert_raw(before.end() - delta, before.end());
 

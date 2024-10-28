@@ -8,21 +8,7 @@ get_seeded_random()
 }
 
 SEED=$RANDOM
-# NUM=$((1 + $RANDOM % 100))
-
-NUM='29'
-
-# SEED="17931"
-# NUM="61"
-
-# SEED='10314'
-NUM='15'
-
-# SEED="3413"
-# NUM= "15"
-
-NUM='7'
-SEED="24253"
+NUM=$((1 + $RANDOM % 10000))
 
 echo "SEED = $SEED"
 echo "NUM = $NUM"
