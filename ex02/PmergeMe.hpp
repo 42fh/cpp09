@@ -39,6 +39,7 @@ public:
 	void insert_X_block(const unsigned int pos, const t_iv &block_vec);
 	void binary_insert_block(const unsigned int k, const t_iv &block_vec);
 	void binary_insert_all_B_s(const block_vector &paired_block_vector);
+    void insert_raw(const t_iv::const_iterator begin, const t_iv::const_iterator end);
 
 	t_iv get_A_block(const unsigned int i) const;
 	t_iv get_B_block(const unsigned int i) const;

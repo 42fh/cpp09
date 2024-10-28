@@ -30,6 +30,12 @@ void block_vector::insert_X_block(const unsigned int pos, const t_iv &block_vec)
 	_vector.insert(_vector.begin() + (pos - 1) * block_size, block_vec.begin(), block_vec.end());
 }
 
+void block_vector::insert_raw(const t_iv::const_iterator begin, const t_iv::const_iterator end)
+{
+    _vector.insert(_vector.end(), begin, end);
+}
+
+
 // eg 7 -> 4, 2
 // _1_2_3_4_5_6_7_
 // eg 3 -> 
@@ -76,10 +82,11 @@ void block_vector::binary_insert_all_B_s(const block_vector &paired_block_vector
 		b_i_start = ( std::pow(2, k + 1) + std::pow(-1, k) ) / 3;
 		for (unsigned int index = b_i_start; index > b_i_end; index -= 1)
 		{
-			if (index > this->max_B_i())
+			if (index > paired_block_vector.max_B_i())
 				k_boundary = k;
 			else
 			{
+                OS << "index = " << index << " max B_i,i= " << paired_block_vector.max_B_i() << EL;
 				t_iv b_i = paired_block_vector.get_B_block(index);
 				this->binary_insert_block(k, b_i);
 			}

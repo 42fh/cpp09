@@ -107,6 +107,11 @@ int main(int c, char **v)
 		bs_all_a_s_BV.binary_insert_all_B_s(bs_blocks);
         OS << "bs_all_a_s_BV binary inserted \n" << bs_all_a_s_BV.getVector() << EL;
 
+        if (before.size() != bs_all_a_s_BV.getVector().size())
+        {
+        }        
+        const int delta = before.size() - bs_all_a_s_BV.getVector().size();
+        bs_all_a_s_BV.insert_raw(before.end() - delta, before.end());
 
 		before.clear();
 		before = bs_all_a_s_BV.getVector();
