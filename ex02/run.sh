@@ -8,7 +8,7 @@ get_seeded_random()
 }
 
 # SEED=$RANDOM
-SEED='22755'
+SEED='55690'
 echo "SEED = $SEED"
 
 ./PmergeMe $(seq 9 | gsort --random-source=<(get_seeded_random $SEED) -R  | tr '\n' ' ')

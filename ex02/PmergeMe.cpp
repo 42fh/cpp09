@@ -21,10 +21,11 @@ block_vector::~block_vector()
 
 void block_vector::insert_X_block(const unsigned int pos, const t_iv &block_vec)
 {
-	if (pos == 0 || pos > max_X_i())
+    if (pos == 0 || pos > max_X_i() + 1)
 	{
 		std::cerr << "insert_X_block tried inserting at " << pos << " for blocksize " << block_size << " and vector size " << _vector.size() << " \n";
-		throw std::exception();
+		std::cerr << "this->vector " << this->getVector() << " block_vec = " << block_vec << EL;
+        throw std::exception();
 	}
 
 	_vector.insert(_vector.begin() + (pos - 1) * block_size, block_vec.begin(), block_vec.end());
@@ -86,7 +87,7 @@ void block_vector::binary_insert_all_B_s(const block_vector &paired_block_vector
 				k_boundary = k;
 			else
 			{
-                OS << "index = " << index << " max B_i,i= " << paired_block_vector.max_B_i() << EL;
+                // OS << "index = " << index << " max B_i,i= " << paired_block_vector.max_B_i() << EL;
 				t_iv b_i = paired_block_vector.get_B_block(index);
 				this->binary_insert_block(k, b_i);
 			}
@@ -190,14 +191,12 @@ t_iv block_vector::get_X_block(const unsigned int i) const
 
 t_iv block_vector::get_all_A_blocks() const
 {
-    OS << ".get_all_A_blocks(), block_size = " << block_size << EL;
 	const unsigned int max_a_index = this->max_A_i();
 
 	t_iv ret;
 	for (unsigned int i = 1; i <= max_a_index; i += 1)
 	{
 		const t_iv a_i = this->get_A_block(i);
-        OS << "inserting a_" << i << " = \n" << a_i;
 		ret.insert(ret.end(), a_i.begin(), a_i.end());
 	}
 	return ret;
