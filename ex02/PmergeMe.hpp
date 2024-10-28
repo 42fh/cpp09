@@ -6,6 +6,7 @@
 #include <cmath>
 #include <cassert>
 #include <cstdlib>
+#include <ctime>
 
 #define OS std::cout
 #define EL std::endl

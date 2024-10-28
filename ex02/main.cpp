@@ -72,6 +72,8 @@ int main(int c, char **v)
     std::cout << "provided input:\n" << input << '\n';
 
 
+    clock_t start_vector = clock();
+
 	const t_iv random_vector = input;
 	const t_iv pair_vector = make_pairs_of_pairs(random_vector);
 
@@ -98,9 +100,17 @@ int main(int c, char **v)
 		before = bs_all_a_s_BV.getVector();
 	}
 
+    clock_t end_vector = clock();
+
+
 	final_check_and_msg(before);
 
+    OS << double(end_vector - start_vector ) / double(CLOCKS_PER_SEC) << EL;
+
+
     main2(c, v);
+
+
 
 	return 0;
 }
@@ -140,6 +150,8 @@ int main2(int c, char **v)
     
     std::cout << "provided input:\n" << input << '\n';
 
+    clock_t start_deque = clock();
+
 
 	const t_id random_deque = input;
 	const t_id pair_deque = make_pairs_of_pairs(random_deque);
@@ -168,7 +180,12 @@ int main2(int c, char **v)
 		before = bs_all_a_s_BV.getDeque();
 	}
 
+    clock_t end_deque = clock();
+
+
 	final_check_and_msg(before);
+
+    OS << double(end_deque - start_deque ) / double(CLOCKS_PER_SEC) << EL;
 
 	return 0;
 }
