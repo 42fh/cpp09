@@ -5,6 +5,17 @@
 #include "PmergeMe.hpp"
 #include <iomanip>
 
+bool hasDuplicates(const std::vector<int>& other) {
+    t_iv vec(other);
+    std::sort(vec.begin(), vec.end());
+    for (size_t i = 1; i < vec.size(); ++i) {
+        if (vec[i] == vec[i - 1]) {
+            return true;
+        }
+    }
+    return false;
+}
+
 static bool is_digit(char *str)
 {
     while (*str)
@@ -59,11 +70,13 @@ int main(int c, char **v)
 	const t_iv random_vector = input;
 	const t_iv pair_vector = make_pairs_of_pairs(random_vector);
 
+    OS << "pair_vector\n " << pair_vector << EL;
+
 	const unsigned int biggest_smaller_power = calculate_biggest_block(pair_vector);
 
 
 
-	// OS << "biggest_smaller_power " << biggest_smaller_power << EL;
+	OS << "biggest_smaller_power " << biggest_smaller_power << EL;
 
 	const unsigned int two_block_size = biggest_smaller_power / 2;
 	t_iv one_swap_vector = pair_vector;
@@ -77,15 +90,24 @@ int main(int c, char **v)
 	OS << before << EL;
 	for (unsigned int block_size = two_block_size / 2; block_size > 0; block_size /= 2)
 	{
-		OS << block_size << " (blocksize), \n" << before << EL;
+        if (hasDuplicates(before))
+            OS << "ERROR, duplicates!\n"; 
+		OS << block_size << " (blocksize) | num elements " << before.size() << "\n" << before << EL;
+
 		block_vector bs_blocks(before, block_size);
+        OS << "bs_block \n" << bs_blocks.getVector() << EL;
 
 		t_iv bs_all_a_s = bs_blocks.get_all_A_blocks();
-		
+        OS << "bs_all_a_s \n" << bs_all_a_s << EL;
+
 		block_vector bs_all_a_s_BV(bs_all_a_s, block_size);
+        OS << "bs_all_a_s_BV \n" << bs_all_a_s_BV.getVector() << EL;
+
 		
 		bs_all_a_s_BV.binary_insert_all_B_s(bs_blocks);
-		
+        OS << "bs_all_a_s_BV binary inserted \n" << bs_all_a_s_BV.getVector() << EL;
+
+
 		before.clear();
 		before = bs_all_a_s_BV.getVector();
 	}
@@ -93,20 +115,20 @@ int main(int c, char **v)
 	final_check_and_msg(before);
 
 
-    {
-        block_vector test1(input, 2);
-        OS << "test1 = \n" << test1.getVector() << EL;
-        for (unsigned int i = 1; i <= test1.max_A_i(); i++)
-        {
-            OS << "A_"<< i << " = " << test1.get_A(i) << EL;
-        }
-        OS << EL << EL;
-        for (unsigned int i = 1; i <= test1.max_B_i(); i++)
-        {
-            OS << "B_" << i << " = " << test1.get_B(i) << EL;
-        }
-        OS << EL;
-    }
+    // {
+    //     block_vector test1(input, 2);
+    //     OS << "test1 = \n" << test1.getVector() << EL;
+    //     for (unsigned int i = 1; i <= test1.max_A_i(); i++)
+    //     {
+    //         OS << "A_"<< i << " = " << test1.get_A(i) << EL;
+    //     }
+    //     OS << EL << EL;
+    //     for (unsigned int i = 1; i <= test1.max_B_i(); i++)
+    //     {
+    //         OS << "B_" << i << " = " << test1.get_B(i) << EL;
+    //     }
+    //     OS << EL;
+    // }
 
 
 	return 0;

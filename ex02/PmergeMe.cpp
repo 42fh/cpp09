@@ -116,7 +116,7 @@ int block_vector::get_B(const unsigned int i) const
 {
     if (i == 0 || i > this->max_B_i())
         throw std::runtime_error("get_A tried accessing out of range index");
-    if (i == this->max_B_i())
+    if (i == this->max_B_i() && max_B_i() > max_A_i())
     	return _vector.at(2 * (i - 1) * block_size);
     else
     	return _vector.at(2 * (i - 1) * block_size + block_size);
@@ -157,7 +157,7 @@ t_iv block_vector::get_B_block(const unsigned int i) const
     // note the elements are layed out in the vector like this: (special case odd elements), eg. 5:
     // A_1 B_1 A_2 B_2 B_3 (so the last element is B_3!)    
     const t_iv::const_iterator block_start = 
-        (i == max_B_i()) ? 
+        (i == max_B_i() && max_B_i() > max_A_i()) ? 
             _vector.begin() + 2 * (i - 1) * block_size 
             : _vector.begin() + 2 * (i - 1) * block_size + block_size; 
 
@@ -183,12 +183,14 @@ t_iv block_vector::get_X_block(const unsigned int i) const
 
 t_iv block_vector::get_all_A_blocks() const
 {
+    OS << ".get_all_A_blocks(), block_size = " << block_size << EL;
 	const unsigned int max_a_index = this->max_A_i();
 
 	t_iv ret;
 	for (unsigned int i = 1; i <= max_a_index; i += 1)
 	{
 		const t_iv a_i = this->get_A_block(i);
+        OS << "inserting a_" << i << " = \n" << a_i;
 		ret.insert(ret.end(), a_i.begin(), a_i.end());
 	}
 	return ret;
@@ -265,7 +267,7 @@ t_iv make_pairs_of_pairs(const t_iv &vector)
 		(number_of_blocks = vector.size() / block_size) > 1
 	)
 	{
-		for (size_t i = 0; i + 2 * block_size < new_vector.size(); i += 2 * block_size)
+		for (size_t i = 0; i + 2 * block_size <= new_vector.size(); i += 2 * block_size)
 		{
 			if (new_vector.at(i) < new_vector.at(i + block_size))
 				block_swap(new_vector.begin() + i, new_vector.begin() + i + block_size, block_size);
