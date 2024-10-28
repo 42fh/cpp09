@@ -7,7 +7,6 @@
 #include <cassert>
 #include <cstdlib>
 
-
 #define OS std::cout
 #define EL std::endl
 
@@ -113,3 +112,5 @@ public:
 		return _deque;
 	}
 };
+
+int main2(int c, char **v);

@@ -100,24 +100,45 @@ int main(int c, char **v)
 
 	final_check_and_msg(before);
 
+    main2(c, v);
+
 	return 0;
 }
 
-int main2(t_id input)
+// validate_input_deque
+static std::deque<int> validate_input_deque(int c, char **v)
 {
-    // if (c < 2){
-    //     std::cerr << "Error: no input provided\n"; return(1); }
+    std::deque<int> ret;
 
+    for (int i = 1; i < c; i++)
+    {
+        if (!is_digit(v[i]))
+            throw std::runtime_error("invalid number (contains non digits)");
+        int tmp = atoi(v[i]);
+        if (tmp < 0)
+            throw std::runtime_error("invalid number (no negative numbers allowed)");
+        ret.push_back(tmp);
+    }
+    std::set<int> retset(ret.begin(), ret.end());
+    if (retset.size() != ret.size())
+        throw std::runtime_error("no duplicates allowed");
+    return (ret);
+}
 
-    // std::deque<int> input;
-    // try {
-    //     input = validate_input(c, v);
-    // }
-    // catch (std::exception& e){
-    //     std::cerr << e.what() << '\n';
-    // }
+int main2(int c, char **v)
+{
+    if (c < 2){
+        std::cerr << "Error: no input provided\n"; return(1); }
+
+    std::deque<int> input;
+    try {
+        input = validate_input_deque(c, v);
+    }
+    catch (std::exception& e){
+        std::cerr << e.what() << '\n';
+    }
     
-    // std::cout << "provided input:\n" << input << '\n';
+    std::cout << "provided input:\n" << input << '\n';
 
 
 	const t_id random_deque = input;

@@ -357,6 +357,8 @@ std::ostream& operator<<(std::ostream& os, const std::vector<int> &v)
 
 
 
+
+
 block_deque::block_deque(const t_id &other, const unsigned int &block_size_initializer): _deque(other), block_size(block_size_initializer)
 {
 	unsigned int num = block_size_initializer;
@@ -577,13 +579,7 @@ t_id block_deque::get_all_A_blocks() const
 // -----------
 
 
-void set_and_print_seed()
-{
-	const unsigned int seed = time(NULL) % 1000;
-	// const unsigned int seed = 325;
-	std::srand(seed);
-	std::cout << "seed = " << seed << std::endl;
-}
+
 
 bool isSorted(const std::deque<int>& deq) {
     for (size_t i = 1; i < deq.size(); ++i) {
