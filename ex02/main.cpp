@@ -90,7 +90,7 @@ int main(int c, char **v)
 
 
     {
-        block_vector test1(input, 1);
+        block_vector test1(input, 2);
         OS << "test1 = \n" << test1.getVector() << EL;
         for (unsigned int i = 1; i <= test1.max_A_i(); i++)
         {

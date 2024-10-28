@@ -21,7 +21,7 @@ block_vector::~block_vector()
 
 void block_vector::insert_X_block(const unsigned int pos, const t_iv &block_vec)
 {
-	if (pos == 0 || pos > (_vector.size() / block_size) + 1)
+	if (pos == 0 || pos > max_X_i())
 	{
 		std::cerr << "insert_X_block tried inserting at " << pos << " for blocksize " << block_size << " and vector size " << _vector.size() << " \n";
 		throw std::exception();
@@ -34,21 +34,21 @@ void block_vector::insert_X_block(const unsigned int pos, const t_iv &block_vec)
 // _1_2_3_4_5_6_7_
 // eg 3 -> 
 // _1_2_3_
-// b_4 which has 7 options (for 8 rand num) can be inserted with 3 cmps
+// b_4 which has 7 options (for 8 rand num) can be inserted with 3 comparisons
 void block_vector::binary_insert_block(const unsigned int k, const t_iv &block_vec)
 {
 	unsigned int pos = std::pow(2, k - 1); // initial position 
 	unsigned int step = pos / 2;
 	const int leading_element = block_vec.at(0);
-	// OS << "pos = " << pos << " step = " << step << " leading_elemet = " << EL;
-
+    const unsigned int upper_bound = max_X_i();
+	// OS << "pos = " << pos << " step = " << step << " leading_element = " << EL;
 
 	while (step > 0)
 	{
 		if (this->get_X(pos) > leading_element)
 			pos -= step;
 		else
-			pos += step;
+			pos = std::min(pos + step, upper_bound) ;
 		step /= 2;
 	}
 
@@ -99,7 +99,10 @@ unsigned int block_vector::max_B_i(void) const
 	return ((_vector.size() / block_size) + 1) / 2;
 }
 
-
+unsigned int block_vector::max_X_i(void) const
+{
+	return ((_vector.size() / block_size));
+}
 
 
 int block_vector::get_A(const unsigned int i) const
@@ -121,19 +124,15 @@ int block_vector::get_B(const unsigned int i) const
 
 int block_vector::get_X(const unsigned int i) const
 {
+    if (i == 0 || i > max_X_i())
+        throw std::runtime_error("get_X tried accessing out of range index");
 	return _vector.at((i - 1) * block_size);
 }
 
-
-// one indexed acess for block A_1, A_2, ...
+// one indexed access for block A_1, A_2, ...
 t_iv block_vector::get_A_block(const unsigned int i) const
 {
-	// if (_vector.size() < 2 * (i - 1) * block_size + block_size)
-	// {
-	// 	std::cerr << "getA tried accessing element " << i << " for blocksize " << block_size << " and vector size " << _vector.size() << " \n";
-	// 	throw std::exception();
-	// }
-	if (i == 0)
+	if (i == 0 || i > max_A_i())
 	{
 		std::cerr << "getA is 1 indexed (0 is invalid) tried accessing element " << i << " for blocksize " << block_size << " and vector size " << _vector.size() << " \n";
 		throw std::exception();
@@ -145,35 +144,31 @@ t_iv block_vector::get_A_block(const unsigned int i) const
 	return block;
 }
 
-// one indexed acess for block B_1, B_2, ...
+// one indexed access for block B_1, B_2, ...
 t_iv block_vector::get_B_block(const unsigned int i) const
 {
-	// if (_vector.size() < 2 * (i) * block_size)
-	// {
-	// 	std::cerr << "get_B_block tried accessing element " << i << " for blocksize " << block_size << " and vector size " << _vector.size() << " \n";
-	// 	throw std::exception();
-	// }
-	if (i == 0)
+	if (i == 0 || i > max_B_i())
 	{
 		std::cerr << "get_A_block is 1 indexed (0 is invalid) tried accessing element " << i << " for blocksize " << block_size << " and vector size " << _vector.size() << " \n";
 		throw std::exception();
 	}
 
 	t_iv block;
-	const t_iv::const_iterator block_start = _vector.begin() + 2 * (i - 1) * block_size + block_size; 
+    // note the elements are layed out in the vector like this: (special case odd elements), eg. 5:
+    // A_1 B_1 A_2 B_2 B_3 (so the last element is B_3!)    
+    const t_iv::const_iterator block_start = 
+        (i == max_B_i()) ? 
+            _vector.begin() + 2 * (i - 1) * block_size 
+            : _vector.begin() + 2 * (i - 1) * block_size + block_size; 
+
 	block.insert(block.begin(), block_start, block_start + block_size);
 	return block;
 }
 
-// one indexed acess for block B_1, B_2, ...
+// one indexed access for block B_1, B_2, ...
 t_iv block_vector::get_X_block(const unsigned int i) const
 {
-	if (_vector.size() < (i) * block_size)
-	{
-		std::cerr << "get_B_block tried accessing element " << i << " for blocksize " << block_size << " and vector size " << _vector.size() << " \n";
-		throw std::exception();
-	}
-	if (i == 0)
+	if (i == 0 || i > max_X_i())
 	{
 		std::cerr << "get_A_block is 1 indexed (0 is invalid) tried accessing element " << i << " for blocksize " << block_size << " and vector size " << _vector.size() << " \n";
 		throw std::exception();

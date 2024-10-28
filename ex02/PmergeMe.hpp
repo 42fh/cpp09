@@ -47,6 +47,7 @@ public:
 
 	unsigned int max_A_i(void) const;
 	unsigned int max_B_i(void) const;
+	unsigned int max_X_i(void) const;
 
 	int get_A(const unsigned int i) const;
 	int get_B(const unsigned int i) const;
