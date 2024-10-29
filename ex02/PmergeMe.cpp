@@ -240,10 +240,10 @@ bool isSorted(const std::vector<int>& vec) {
 
 void final_check_and_msg(const t_iv &before)
 {
-	OS << before << EL;
+	OS << "After:\t" << before;
 	if (isSorted(before))
 	{
-		OS << "OK" << EL;
+		// OS << "OK" << EL;
 	}
 	else
 	{
@@ -335,19 +335,19 @@ std::ostream& operator<<(std::ostream& os, const std::vector<int> &v)
 	size_t i = 0;
 	for (; i < v.size() && i < 14; i++)
 	{
-		os << v.at(i);
-		if (i % 2 == 0)	
-			os << "==";
-		else if (i % 4 == 1)
-			os << "⋯⋯";
-		else if (i % 8 == 3)
-			os << "--";
-		else
-			os << "  ";
+		os << std::setw(4) << v.at(i) << " ";
+		// if (i % 2 == 0)	
+		// 	os << "==";
+		// else if (i % 4 == 1)
+		// 	os << "⋯⋯";
+		// else if (i % 8 == 3)
+		// 	os << "--";
+		// else
+		// 	os << "  ";
 	}
 	if (i < v.size())
-		os << "... (" << v.size() << " more)" << EL;
-	os << "\n";
+		os << "... (" << v.size() << " more)";
+	os << EL;
 	return os;
 	
 }
@@ -592,10 +592,10 @@ bool isSorted(const std::deque<int>& deq) {
 
 void final_check_and_msg(const t_id &before)
 {
-	OS << before << EL;
+	// OS << before << EL;
 	if (isSorted(before))
 	{
-		OS << "OK" << EL;
+		// OS << "OK" << EL;
 	}
 	else
 	{

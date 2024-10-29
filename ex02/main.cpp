@@ -67,26 +67,28 @@ int main(int c, char **v)
     }
     catch (std::exception& e){
         std::cerr << e.what() << '\n';
+        return 1;
     }
     
-    std::cout << "provided input:\n" << input << '\n';
 
 
     clock_t start_vector = clock();
 
+    OS << "Before:\t" << input;
+
 	const t_iv random_vector = input;
 	const t_iv pair_vector = make_pairs_of_pairs(random_vector);
 
-    OS << "pair_vector\n " << pair_vector << EL;
+    // OS << "pair_vector\n " << pair_vector << EL;
 
 	const unsigned int biggest_smaller_power = calculate_biggest_block(pair_vector);
 
 	t_iv before(pair_vector);
-	OS << before << EL;
+	// OS << before << EL;
 	for (unsigned int block_size = biggest_smaller_power / 2; block_size > 0; block_size /= 2)
 	{
-        if (hasDuplicates(before))
-            OS << "ERROR, duplicates!\n"; 
+        // if (hasDuplicates(before))
+        //     OS << "ERROR, duplicates!\n"; 
 
 		block_vector bs_blocks(before, block_size);
 		t_iv bs_all_a_s = bs_blocks.get_all_A_blocks();
@@ -105,7 +107,7 @@ int main(int c, char **v)
 
 	final_check_and_msg(before);
 
-    OS << double(end_vector - start_vector ) / double(CLOCKS_PER_SEC) << EL;
+    OS << "Time to process a using std::vector : " << double(end_vector - start_vector ) / double(CLOCKS_PER_SEC) << EL;
 
 
     main2(c, v);
@@ -146,9 +148,10 @@ int main2(int c, char **v)
     }
     catch (std::exception& e){
         std::cerr << e.what() << '\n';
+        return 1;
     }
     
-    std::cout << "provided input:\n" << input << '\n';
+    // std::cout << "Before: " << input << '\n';
 
     clock_t start_deque = clock();
 
@@ -156,16 +159,16 @@ int main2(int c, char **v)
 	const t_id random_deque = input;
 	const t_id pair_deque = make_pairs_of_pairs(random_deque);
 
-    OS << "pair_deque\n " << pair_deque << EL;
+    // OS << "pair_deque\n " << pair_deque << EL;
 
 	const unsigned int biggest_smaller_power = calculate_biggest_block(pair_deque);
 
 	t_id before(pair_deque);
-	OS << before << EL;
+	// OS << before << EL;
 	for (unsigned int block_size = biggest_smaller_power / 2; block_size > 0; block_size /= 2)
 	{
-        if (hasDuplicates(before))
-            OS << "ERROR, duplicates!\n"; 
+        // if (hasDuplicates(before))
+        //     OS << "ERROR, duplicates!\n"; 
 
 		block_deque bs_blocks(before, block_size);
 		t_id bs_all_a_s = bs_blocks.get_all_A_blocks();
@@ -185,7 +188,7 @@ int main2(int c, char **v)
 
 	final_check_and_msg(before);
 
-    OS << double(end_deque - start_deque ) / double(CLOCKS_PER_SEC) << EL;
+    OS << "Time to process a using std::deque  : " << double(end_deque - start_deque ) / double(CLOCKS_PER_SEC) << EL;
 
 	return 0;
 }

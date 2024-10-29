@@ -240,10 +240,10 @@ bool isSorted(const std::deque<int>& deq) {
 
 void final_check_and_msg(const t_id &before)
 {
-	OS << before << EL;
+	// OS << before << EL;
 	if (isSorted(before))
 	{
-		OS << "OK" << EL;
+		// OS << "OK" << EL;
 	}
 	else
 	{
