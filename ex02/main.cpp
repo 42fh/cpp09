@@ -17,7 +17,6 @@ int main(int c, char **v)
 }
 
 
-
 int sort_using_vector(int c, char **v)
 {
     if (c < 2)
